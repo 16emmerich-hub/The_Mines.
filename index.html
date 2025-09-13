@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>The Mines - Visual Edition</title>
+    <meta name="description" content="Play The Mines! Click blocks to mine, find Earth Crystals, discover hidden vaults, and survive the Mines.">
+    <style>
+        body { font-family: Arial; text-align: center; background-color: #111; color: #eee; }
+        h1 { margin: 20px; }
+        #mineArea { display: grid; grid-template-columns: repeat(5, 60px); gap: 5px; justify-content: center; margin-top: 20px; }
+        .block { width: 60px; height: 60px; background-color: #666; display: inline-block; cursor: pointer; border-radius: 5px; }
+        .mined { background-color: #333; }
+        #info { margin-top: 20px; }
+        button { font-size: 18px; padding: 10px 20px; margin-top: 20px; border: none; border-radius: 5px; background-color: #444; color: #eee; cursor: pointer; }
+        button:hover { background-color: #666; }
+    </style>
+</head>
+<body>
+
+<h1>The Mines - Visual Edition</h1>
+<p>Click blocks to mine and explore the Mines!</p>
+<button id="startBtn">Start Game</button>
+
+<div id="mineArea"></div>
+<div id="info"></div>
+
+<script>
+let blocksMined = 0;
+let earthCrystalFound = false;
+let vaultFound = false;
+let totalBlocks = 15; // total blocks to mine
+
+document.getElementById('startBtn').onclick = function() {
+    document.getElementById('startBtn').style.display = 'none';
+    startGame();
+};
+
+function startGame() {
+    let info = document.getElementById('info');
+    
+    // Job choice
+    let jobChoice = confirm("Do you want to take a city job? (OK = yes, Cancel = no)");
+    if (!jobChoice) {
+        alert("You try all jobs in the city, get rejected, and the mines become your last hope.");
+    } else {
+        alert("You take a job but soon find it unfulfilling. Adventure calls you to the mines.");
+    }
+
+    // Cave-in
+    alert("You enter the mines, but a cave-in traps you! The only way out is to mine the Earth Crystal.");
+
+    // Show mine blocks
+    let mineArea = document.getElementById('mineArea');
+    mineArea.innerHTML = "";
+    for(let i=0; i<totalBlocks; i++){
+        let block = document.createElement('div');
+        block.className = "block";
+        block.onclick = function() { mineBlock(block); };
+        mineArea.appendChild(block);
+    }
+
+    info.innerHTML = "Blocks mined: 0";
+}
+
+function mineBlock(block) {
+    if(block.classList.contains('mined')) return; // already mined
+
+    block.classList.add('mined');
+    blocksMined++;
+    document.getElementById('info').innerText = "Blocks mined: " + blocksMined;
+
+    // Find Earth Crystal at block 5
+    if(blocksMined === 5 && !earthCrystalFound){
+        earthCrystalFound = true;
+        alert("You found the Earth Crystal! You can move rocks and escape the cave-in.");
+    }
+
+    // Find vault at block 10
+    if(blocksMined === 10 && !vaultFound){
+        vaultFound = true;
+        alert("You discovered a hidden vault with better tools!");
+    }
+
+    // Escape after last block
+    if(blocksMined === totalBlocks){
+        alert("You escape the mines! Time flows differently, and it is now 2031! Scientists reward you with fortune, technology, and a loving family!");
+        document.getElementById('mineArea').innerHTML = "";
+        document.getElementById('info').innerHTML = "<h2>Congratulations! You survived The Mines!</h2>";
+    }
+}
+</script>
+
+</body>
+</html>
